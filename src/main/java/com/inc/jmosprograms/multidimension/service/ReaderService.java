@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -20,13 +19,19 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.inc.jmosprograms.multidimension.entity.Melate;
+import com.inc.jmosprograms.multidimension.entity.MelateContinua;
+import com.inc.jmosprograms.multidimension.repository.MelateContinuaRepository;
 import com.inc.jmosprograms.multidimension.repository.MelateRepository;
 import com.inc.jmosprograms.multidimension.vo.MELATE_COLUMNS_ENUM;
+import com.inc.jmosprograms.multidimension.vo.MelateVoContainers;
 
 @Service
 public class ReaderService {
+	Object[] readerResults;
 	@Autowired
 	MelateRepository melateRepository;
+	@Autowired
+	MelateContinuaRepository melateContinuaRepository;
 	private static Logger LOG = Logger.getLogger(ReaderService.class);
 	// It might be replaced by this another rule : Scheduled(cron = "0 6 16 * *
 	// ?")
@@ -36,15 +41,21 @@ public class ReaderService {
 
 	@Scheduled(fixedRate = TIME_INTERVAL)
 	public void loadAllResults() {
-		LOG.info("Corriéndolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
-		List<Melate> melates = loadFile("C:\\jmNewDevelopment\\development-R\\Melate(2).csv");
-		melateRepository.saveAll(melates);
-		LOG.info("TERMINADO :: " + melates.size() + " INSERTED ROWS- " + dateTimeFormatter.format(LocalDateTime.now()));
+		LOG.info("Corriendolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
+		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate(2).csv");
+		melateRepository.saveAll(melatesContainers.getResult());
+		melateContinuaRepository.saveAll(melatesContainers.getResultContinua());
+		LOG.info("TERMINADO :: " + melatesContainers.getResult().size() + " INSERTED MELATE ROWS- "
+				+ dateTimeFormatter.format(LocalDateTime.now()));
+		LOG.info("TERMINADO :: " + melatesContainers.getResultContinua().size() + " INSERTED MELATESCONTINUAS ROWS- "
+				+ dateTimeFormatter.format(LocalDateTime.now()));
 
 	}
 
-	List<Melate> loadFile(String filePath) {
+	MelateVoContainers loadFile(String filePath) {
+		readerResults = new Object[2];
 		ArrayList<Melate> arryResults = null;
+		ArrayList<MelateContinua> arrysContinuas = null;
 		try {
 
 			BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -59,6 +70,7 @@ public class ReaderService {
 			SimpleDateFormat sacarNumeroMesFormat = new SimpleDateFormat("MM", localeMX);
 			SimpleDateFormat sacarNumeroYearFormat = new SimpleDateFormat("yyyy", localeMX);
 			arryResults = new ArrayList<>();
+			arrysContinuas = new ArrayList<>();
 			while (ln != null) {
 				ln = br.readLine();
 				Melate mela = new Melate();
@@ -145,6 +157,36 @@ public class ReaderService {
 					mela.setDiff5(mela.getR5() - mela.getR4());
 					mela.setDiff6(mela.getR6() - mela.getR5());
 					arryResults.add(mela);
+					// aqui vamos a crear el entity donde las R's son continuas
+					// o discretas como le puse
+
+					MelateContinua continua = new MelateContinua(mela);
+					continua.setRcontinua(mela.getR1());
+					arrysContinuas.add(continua);
+
+					continua = new MelateContinua(mela);
+					continua.setRcontinua(mela.getR2());
+					arrysContinuas.add(continua);
+
+					continua = new MelateContinua(mela);
+					continua.setRcontinua(mela.getR3());
+					arrysContinuas.add(continua);
+
+					continua = new MelateContinua(mela);
+					continua.setRcontinua(mela.getR4());
+					arrysContinuas.add(continua);
+
+					continua = new MelateContinua(mela);
+					continua.setRcontinua(mela.getR5());
+					arrysContinuas.add(continua);
+
+					continua = new MelateContinua(mela);
+					continua.setRcontinua(mela.getR6());
+					arrysContinuas.add(continua);
+
+					continua = new MelateContinua(mela);
+					continua.setRcontinua(mela.getR7());
+					arrysContinuas.add(continua);
 
 				}
 				i++;
@@ -157,7 +199,11 @@ public class ReaderService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return arryResults;
+		MelateVoContainers melateVoContainers = new MelateVoContainers();
+		melateVoContainers.setResult(arryResults);
+		melateVoContainers.setResultContinua(arrysContinuas);
+		;
+		return melateVoContainers;
 	}
 
 	/**
@@ -172,13 +218,5 @@ public class ReaderService {
 		}
 		return true;
 	}
-
-	/*
-	 * public static void main(String[] args) { Reader r = new Reader(); for
-	 * (int i = 1; i <= 56; ++i) { if (r.isPrime(i)) { System.out.println("i=" +
-	 * i + ".-" + (r.isPrime(i) ? "prime" : "no prime")); } }
-	 *
-	 * }
-	 */
 
 }

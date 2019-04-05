@@ -80,6 +80,46 @@ public class MelateContinua {
 	@Column
 	private Integer diff6;
 
+	public MelateContinua() {
+
+	}
+
+	public MelateContinua(Melate melate) {
+		// this.id=melate.;
+		producto = melate.getProducto();
+		concurso = melate.getConcurso();
+		rcontinua = melate.getR1();
+		bolsa = melate.getBolsa();
+		fecha = melate.getFecha();
+		fechaStr = melate.getFechaStr();
+		nombreDia = melate.getNombreDia();
+		nombreMes = melate.getNombreMes();
+		numeroDiaSemana = melate.getNumeroDiaSemana();
+		numeroDia = melate.getNumeroDia();
+		numeroMes = melate.getNumeroMes();
+		numeroYear = melate.getNumeroYear();
+		r1Impar = melate.getR1Impar();
+		r2Impar = melate.getR2Impar();
+		r3Impar = melate.getR3Impar();
+		r4Impar = melate.getR4Impar();
+		r5Impar = melate.getR5Impar();
+		r6Impar = melate.getR6Impar();
+		r7Impar = melate.getR7Impar();
+		r1Primo = melate.getR1Primo();
+		r2Primo = melate.getR2Primo();
+		r3Primo = melate.getR3Primo();
+		r4Primo = melate.getR4Primo();
+		r5Primo = melate.getR5Primo();
+		r6Primo = melate.getR6Primo();
+		r7Primo = melate.getR7Primo();
+		diff2 = melate.getDiff2();
+		diff3 = melate.getDiff3();
+		diff4 = melate.getDiff4();
+		diff5 = melate.getDiff5();
+		diff6 = melate.getDiff6();
+
+	}
+
 	public Integer getConcurso() {
 		return concurso;
 	}
