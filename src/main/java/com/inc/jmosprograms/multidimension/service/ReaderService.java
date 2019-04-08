@@ -42,7 +42,7 @@ public class ReaderService {
 	@Scheduled(fixedRate = TIME_INTERVAL)
 	public void loadAllResults() {
 		LOG.info("Corriendolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
-		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate(2).csv");
+		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate20190704.csv");
 		melateRepository.saveAll(melatesContainers.getResult());
 		melateContinuaRepository.saveAll(melatesContainers.getResultContinua());
 		LOG.info("TERMINADO :: " + melatesContainers.getResult().size() + " INSERTED MELATE ROWS- "
@@ -62,9 +62,10 @@ public class ReaderService {
 			String ln = "";
 			int i = 0;
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			Locale localeMX = new Locale("es_MX");
+			Locale localeMX = new Locale("es", "MX");
 			SimpleDateFormat nombreDiaFormat = new SimpleDateFormat("EEEE", localeMX);
 			SimpleDateFormat nombreMesFormat = new SimpleDateFormat("MMMM", localeMX);
+
 			SimpleDateFormat numeroDiaSemanaFormat = new SimpleDateFormat("u");
 			SimpleDateFormat sacarNumeroDiaFormat = new SimpleDateFormat("dd", localeMX);
 			SimpleDateFormat sacarNumeroMesFormat = new SimpleDateFormat("MM", localeMX);
@@ -128,9 +129,14 @@ public class ReaderService {
 						j++;
 					}
 					/// Ahora llenamos los calculados
-					mela.setNombreDia(nombreDiaFormat.format(mela.getFecha()));
+					String originalDia = nombreDiaFormat.format(mela.getFecha()).toUpperCase();
+					if (originalDia.startsWith("M")) {
+						mela.setNombreDia("MIERCOLES");
+					} else {
+						mela.setNombreDia(originalDia);
+					}
 					mela.setNumeroDiaSemana(Integer.parseInt(numeroDiaSemanaFormat.format(mela.getFecha())));
-					mela.setNombreMes(nombreMesFormat.format(mela.getFecha()));
+					mela.setNombreMes(nombreMesFormat.format(mela.getFecha()).toUpperCase());
 					mela.setNumeroDia(Integer.parseInt(sacarNumeroDiaFormat.format(mela.getFecha())));
 					mela.setNumeroMes(Integer.parseInt(sacarNumeroMesFormat.format(mela.getFecha())));
 					mela.setNumeroYear(Integer.parseInt(sacarNumeroYearFormat.format(mela.getFecha())));
