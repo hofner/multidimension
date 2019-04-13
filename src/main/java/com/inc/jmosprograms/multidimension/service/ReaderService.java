@@ -9,9 +9,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +45,7 @@ public class ReaderService {
 	@Scheduled(fixedRate = TIME_INTERVAL)
 	public void loadAllResults() {
 		LOG.info("Corriendolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
-		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate20190704.csv");
+		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate20190412.csv");
 		melateRepository.saveAll(melatesContainers.getResult());
 		melateContinuaRepository.saveAll(melatesContainers.getResultContinua());
 		LOG.info("TERMINADO :: " + melatesContainers.getResult().size() + " INSERTED MELATE ROWS- "
@@ -157,6 +160,14 @@ public class ReaderService {
 					mela.setR6Primo(isPrime(mela.getR6()) ? "PRIMO" : "NO_PRIMO");
 					mela.setR7Primo(isPrime(mela.getR7()) ? "PRIMO" : "NO_PRIMO");
 
+					mela.setR1Fibonacci(isFibonacci(mela.getR1()) ? "FIBONACCI" : "NO_FIBONACCI");
+					mela.setR2Fibonacci(isFibonacci(mela.getR2()) ? "FIBONACCI" : "NO_FIBONACCI");
+					mela.setR3Fibonacci(isFibonacci(mela.getR3()) ? "FIBONACCI" : "NO_FIBONACCI");
+					mela.setR4Fibonacci(isFibonacci(mela.getR4()) ? "FIBONACCI" : "NO_FIBONACCI");
+					mela.setR5Fibonacci(isFibonacci(mela.getR5()) ? "FIBONACCI" : "NO_FIBONACCI");
+					mela.setR6Fibonacci(isFibonacci(mela.getR6()) ? "FIBONACCI" : "NO_FIBONACCI");
+					mela.setR7Fibonacci(isFibonacci(mela.getR7()) ? "FIBONACCI" : "NO_FIBONACCI");
+
 					mela.setDiff2(mela.getR2() - mela.getR1());
 					mela.setDiff3(mela.getR3() - mela.getR2());
 					mela.setDiff4(mela.getR4() - mela.getR3());
@@ -224,5 +235,19 @@ public class ReaderService {
 		}
 		return true;
 	}
+
+	public static boolean isFibonacci(int n) {
+		int[] fibosInt = new int[] { 1, 2, 3, 5, 8, 13, 21, 34, 55 };
+		List<Integer> fibos = Arrays.stream(fibosInt).boxed().collect(Collectors.toList());
+		return fibos.contains(n);
+	}
+
+	/*
+	 * public static void main(String[] args) { Reader r = new Reader(); for
+	 * (int i = 1; i <= 56; ++i) { if (r.isPrime(i)) { System.out.println("i=" +
+	 * i + ".-" + (r.isPrime(i) ? "prime" : "no prime")); } }
+	 *
+	 * }
+	 */
 
 }

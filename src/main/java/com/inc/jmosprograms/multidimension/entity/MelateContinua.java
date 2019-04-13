@@ -69,6 +69,20 @@ public class MelateContinua {
 	private String r6Primo;
 	@Column(name = "R7_PRIMO")
 	private String r7Primo;
+	@Column(name = "R1_FIBONACCI")
+	private String r1Fibonacci;
+	@Column(name = "R2_FIBONACCI")
+	private String r2Fibonacci;
+	@Column(name = "R3_FIBONACCI")
+	private String r3Fibonacci;
+	@Column(name = "R4_FIBONACCI")
+	private String r4Fibonacci;
+	@Column(name = "R5_FIBONACCI")
+	private String r5Fibonacci;
+	@Column(name = "R6_FIBONACCI")
+	private String r6Fibonacci;
+	@Column(name = "R7_FIBONACCI")
+	private String r7Fibonacci;
 	@Column
 	private Integer diff2;
 	@Column
@@ -112,6 +126,13 @@ public class MelateContinua {
 		r5Primo = melate.getR5Primo();
 		r6Primo = melate.getR6Primo();
 		r7Primo = melate.getR7Primo();
+		r1Fibonacci = melate.getR1Fibonacci();
+		r2Fibonacci = melate.getR2Fibonacci();
+		r3Fibonacci = melate.getR3Fibonacci();
+		r4Fibonacci = melate.getR4Fibonacci();
+		r5Fibonacci = melate.getR5Fibonacci();
+		r6Fibonacci = melate.getR6Fibonacci();
+		r7Fibonacci = melate.getR7Fibonacci();
 		diff2 = melate.getDiff2();
 		diff3 = melate.getDiff3();
 		diff4 = melate.getDiff4();
@@ -374,6 +395,62 @@ public class MelateContinua {
 
 	public void setRcontinua(Integer rcontinua) {
 		this.rcontinua = rcontinua;
+	}
+
+	public String getR1Fibonacci() {
+		return r1Fibonacci;
+	}
+
+	public void setR1Fibonacci(String r1Fibonacci) {
+		this.r1Fibonacci = r1Fibonacci;
+	}
+
+	public String getR2Fibonacci() {
+		return r2Fibonacci;
+	}
+
+	public void setR2Fibonacci(String r2Fibonacci) {
+		this.r2Fibonacci = r2Fibonacci;
+	}
+
+	public String getR3Fibonacci() {
+		return r3Fibonacci;
+	}
+
+	public void setR3Fibonacci(String r3Fibonacci) {
+		this.r3Fibonacci = r3Fibonacci;
+	}
+
+	public String getR4Fibonacci() {
+		return r4Fibonacci;
+	}
+
+	public void setR4Fibonacci(String r4Fibonacci) {
+		this.r4Fibonacci = r4Fibonacci;
+	}
+
+	public String getR5Fibonacci() {
+		return r5Fibonacci;
+	}
+
+	public void setR5Fibonacci(String r5Fibonacci) {
+		this.r5Fibonacci = r5Fibonacci;
+	}
+
+	public String getR6Fibonacci() {
+		return r6Fibonacci;
+	}
+
+	public void setR6Fibonacci(String r6Fibonacci) {
+		this.r6Fibonacci = r6Fibonacci;
+	}
+
+	public String getR7Fibonacci() {
+		return r7Fibonacci;
+	}
+
+	public void setR7Fibonacci(String r7Fibonacci) {
+		this.r7Fibonacci = r7Fibonacci;
 	}
 
 }
