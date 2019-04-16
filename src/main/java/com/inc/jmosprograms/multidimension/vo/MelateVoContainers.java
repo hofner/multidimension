@@ -1,13 +1,14 @@
 package com.inc.jmosprograms.multidimension.vo;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import com.inc.jmosprograms.multidimension.entity.Melate;
 import com.inc.jmosprograms.multidimension.entity.MelateContinua;
 
 public class MelateVoContainers {
 	private ArrayList<Melate> result;
-	private ArrayList<MelateContinua> resultContinua;
+	private TreeMap<Integer, ArrayList<MelateContinua>> resultContinua;
 
 	public ArrayList<Melate> getResult() {
 		return result;
@@ -17,12 +18,11 @@ public class MelateVoContainers {
 		this.result = result;
 	}
 
-	public ArrayList<MelateContinua> getResultContinua() {
+	public TreeMap<Integer, ArrayList<MelateContinua>> getResultContinua() {
 		return resultContinua;
 	}
 
-	public void setResultContinua(ArrayList<MelateContinua> resultContinua) {
+	public void setResultContinua(TreeMap<Integer, ArrayList<MelateContinua>> resultContinua) {
 		this.resultContinua = resultContinua;
 	}
-
 }

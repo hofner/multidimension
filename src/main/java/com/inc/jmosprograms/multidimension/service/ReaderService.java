@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -45,9 +46,10 @@ public class ReaderService {
 	@Scheduled(fixedRate = TIME_INTERVAL)
 	public void loadAllResults() {
 		LOG.info("Corriendolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
-		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate20190412.csv");
+		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate20190416.csv");
 		melateRepository.saveAll(melatesContainers.getResult());
-		melateContinuaRepository.saveAll(melatesContainers.getResultContinua());
+		ArrayList<MelateContinua> orderedContinuas = orderTreemapContinuas(melatesContainers.getResultContinua());
+		melateContinuaRepository.saveAll(orderedContinuas);
 		LOG.info("TERMINADO :: " + melatesContainers.getResult().size() + " INSERTED MELATE ROWS- "
 				+ dateTimeFormatter.format(LocalDateTime.now()));
 		LOG.info("TERMINADO :: " + melatesContainers.getResultContinua().size() + " INSERTED MELATESCONTINUAS ROWS- "
@@ -58,7 +60,8 @@ public class ReaderService {
 	MelateVoContainers loadFile(String filePath) {
 		readerResults = new Object[2];
 		ArrayList<Melate> arryResults = null;
-		ArrayList<MelateContinua> arrysContinuas = null;
+		TreeMap<Integer, ArrayList<MelateContinua>> treemapContinuas = new TreeMap<>();
+
 		try {
 
 			BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -74,7 +77,7 @@ public class ReaderService {
 			SimpleDateFormat sacarNumeroMesFormat = new SimpleDateFormat("MM", localeMX);
 			SimpleDateFormat sacarNumeroYearFormat = new SimpleDateFormat("yyyy", localeMX);
 			arryResults = new ArrayList<>();
-			arrysContinuas = new ArrayList<>();
+
 			while (ln != null) {
 				ln = br.readLine();
 				Melate mela = new Melate();
@@ -174,9 +177,10 @@ public class ReaderService {
 					mela.setDiff5(mela.getR5() - mela.getR4());
 					mela.setDiff6(mela.getR6() - mela.getR5());
 					arryResults.add(mela);
+
 					// aqui vamos a crear el entity donde las R's son continuas
 					// o discretas como le puse
-
+					ArrayList<MelateContinua> arrysContinuas = new ArrayList<>();
 					MelateContinua continua = new MelateContinua(mela);
 					continua.setRcontinua(mela.getR1());
 					arrysContinuas.add(continua);
@@ -201,9 +205,12 @@ public class ReaderService {
 					continua.setRcontinua(mela.getR6());
 					arrysContinuas.add(continua);
 
-					continua = new MelateContinua(mela);
-					continua.setRcontinua(mela.getR7());
-					arrysContinuas.add(continua);
+					treemapContinuas.put(continua.getConcurso(), arrysContinuas);
+
+					// DECIDI NO METER LA R7 A LA SERIE DE LA CONTINUA
+					// continua = new MelateContinua(mela);
+					// continua.setRcontinua(mela.getR7());
+					// arrysContinuas.add(continua);
 
 				}
 				i++;
@@ -218,9 +225,18 @@ public class ReaderService {
 		}
 		MelateVoContainers melateVoContainers = new MelateVoContainers();
 		melateVoContainers.setResult(arryResults);
-		melateVoContainers.setResultContinua(arrysContinuas);
+		melateVoContainers.setResultContinua(treemapContinuas);
 		;
 		return melateVoContainers;
+	}
+
+	ArrayList<MelateContinua> orderTreemapContinuas(TreeMap<Integer, ArrayList<MelateContinua>> treemapContinuas) {
+		ArrayList<MelateContinua> result = new ArrayList<>();
+		for (Integer idContinua : treemapContinuas.keySet()) {
+			ArrayList<MelateContinua> laSeriede6 = treemapContinuas.get(idContinua);
+			result.addAll(laSeriede6);
+		}
+		return result;
 	}
 
 	/**
