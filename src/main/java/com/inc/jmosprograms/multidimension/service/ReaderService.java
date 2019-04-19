@@ -46,7 +46,7 @@ public class ReaderService {
 	@Scheduled(fixedRate = TIME_INTERVAL)
 	public void loadAllResults() {
 		LOG.info("Corriendolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
-		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate20190416.csv");
+		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate20190418.csv");
 		melateRepository.saveAll(melatesContainers.getResult());
 		ArrayList<MelateContinua> orderedContinuas = orderTreemapContinuas(melatesContainers.getResultContinua());
 		melateContinuaRepository.saveAll(orderedContinuas);
