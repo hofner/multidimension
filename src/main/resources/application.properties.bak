@@ -8,6 +8,9 @@ flyway.url= ${spring.datasource.url}
 flyway.locations=db/migration
 
 
-interpolation.file.sourcepath=C:\\jmNewDevelopment\\development-R\\in
-interpolation.file.rutaprocesado=C:\\jmNewDevelopment\\development-R\\out
+interpolation.file.sourcepath="C:\\jmNewDevelopment\\development-R\\in"
+interpolation.file.rutaprocesado="C:\\jmNewDevelopment\\development-R\\out"
 
+interpolation.file.limiteini.histograma=2200
+interpolation.file.limiteini.plot=2859
+interpolation.file.limiteini.unidimensional=3000

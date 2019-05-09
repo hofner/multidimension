@@ -1,4 +1,4 @@
-package com.inc.jmosprograms.multidimension.service;
+package com.inc.jmosprograms.multidimension.sequencer;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -6,8 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,47 +15,40 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.inc.jmosprograms.multidimension.entity.Melate;
 import com.inc.jmosprograms.multidimension.entity.MelateContinua;
-import com.inc.jmosprograms.multidimension.repository.MelateContinuaRepository;
-import com.inc.jmosprograms.multidimension.repository.MelateRepository;
 import com.inc.jmosprograms.multidimension.vo.MELATE_COLUMNS_ENUM;
 import com.inc.jmosprograms.multidimension.vo.MelateVoContainers;
 
-@Service
-public class ReaderService {
-	Object[] readerResults;
-	@Autowired
-	MelateRepository melateRepository;
-	@Autowired
-	MelateContinuaRepository melateContinuaRepository;
-	private static Logger LOG = Logger.getLogger(ReaderService.class);
-	// It might be replaced by this another rule : Scheduled(cron = "0 6 16 * *
-	// ?")
-	// Now it's set to every 5 hours
-	private static final int TIME_INTERVAL = 6 * 60 * 60 * 1000;
-	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+@Component
+public class RowsLoader {
+	SimpleDateFormat sdf;
+	SimpleDateFormat dateToStringFormat;
+	Locale localeMX;
+	SimpleDateFormat nombreDiaFormat;
+	SimpleDateFormat nombreMesFormat;
 
-	// @Scheduled(fixedRate = TIME_INTERVAL)
-	public void loadAllResults() {
-		LOG.info("Corriendolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
-		MelateVoContainers melatesContainers = loadFile("C:\\jmNewDevelopment\\development-R\\Melate20190505.csv");
-		melateRepository.saveAll(melatesContainers.getResult());
-		ArrayList<MelateContinua> orderedContinuas = orderTreemapContinuas(melatesContainers.getResultContinua());
-		melateContinuaRepository.saveAll(orderedContinuas);
-		LOG.info("TERMINADO :: " + melatesContainers.getResult().size() + " INSERTED MELATE ROWS- "
-				+ dateTimeFormatter.format(LocalDateTime.now()));
-		LOG.info("TERMINADO :: " + melatesContainers.getResultContinua().size() + " INSERTED MELATESCONTINUAS ROWS- "
-				+ dateTimeFormatter.format(LocalDateTime.now()));
+	SimpleDateFormat numeroDiaSemanaFormat;
+	SimpleDateFormat sacarNumeroDiaFormat;
+	SimpleDateFormat sacarNumeroMesFormat;
+	SimpleDateFormat sacarNumeroYearFormat;
 
+	public RowsLoader() {
+		sdf = new SimpleDateFormat("dd/MM/yyyy");
+		dateToStringFormat = new SimpleDateFormat("dd-MM-yyyy");
+		localeMX = new Locale("es", "MX");
+		nombreDiaFormat = new SimpleDateFormat("EEEE", localeMX);
+		nombreMesFormat = new SimpleDateFormat("MMMM", localeMX);
+
+		numeroDiaSemanaFormat = new SimpleDateFormat("u");
+		sacarNumeroDiaFormat = new SimpleDateFormat("dd", localeMX);
+		sacarNumeroMesFormat = new SimpleDateFormat("MM", localeMX);
+		sacarNumeroYearFormat = new SimpleDateFormat("yyyy", localeMX);
 	}
 
 	MelateVoContainers loadFile(String filePath) {
-		readerResults = new Object[2];
 		ArrayList<Melate> arryResults = null;
 		TreeMap<Integer, ArrayList<MelateContinua>> treemapContinuas = new TreeMap<>();
 
@@ -66,16 +57,7 @@ public class ReaderService {
 			BufferedReader br = new BufferedReader(new FileReader(filePath));
 			String ln = "";
 			int i = 0;
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			SimpleDateFormat dateToStringFormat = new SimpleDateFormat("dd-MM-yyyy");
-			Locale localeMX = new Locale("es", "MX");
-			SimpleDateFormat nombreDiaFormat = new SimpleDateFormat("EEEE", localeMX);
-			SimpleDateFormat nombreMesFormat = new SimpleDateFormat("MMMM", localeMX);
 
-			SimpleDateFormat numeroDiaSemanaFormat = new SimpleDateFormat("u");
-			SimpleDateFormat sacarNumeroDiaFormat = new SimpleDateFormat("dd", localeMX);
-			SimpleDateFormat sacarNumeroMesFormat = new SimpleDateFormat("MM", localeMX);
-			SimpleDateFormat sacarNumeroYearFormat = new SimpleDateFormat("yyyy", localeMX);
 			arryResults = new ArrayList<>();
 
 			while (ln != null) {
@@ -123,7 +105,7 @@ public class ReaderService {
 								mela.setFecha(date);
 								mela.setFechaStr(dateToStringFormat.format(date));
 							} catch (ParseException e) {
-								// TODO Auto-generated catch block
+
 								e.printStackTrace();
 							}
 
@@ -207,11 +189,6 @@ public class ReaderService {
 
 					treemapContinuas.put(continua.getConcurso(), arrysContinuas);
 
-					// DECIDI NO METER LA R7 A LA SERIE DE LA CONTINUA
-					// continua = new MelateContinua(mela);
-					// continua.setRcontinua(mela.getR7());
-					// arrysContinuas.add(continua);
-
 				}
 				i++;
 			}
@@ -230,15 +207,6 @@ public class ReaderService {
 		return melateVoContainers;
 	}
 
-	ArrayList<MelateContinua> orderTreemapContinuas(TreeMap<Integer, ArrayList<MelateContinua>> treemapContinuas) {
-		ArrayList<MelateContinua> result = new ArrayList<>();
-		for (Integer idContinua : treemapContinuas.keySet()) {
-			ArrayList<MelateContinua> laSeriede6 = treemapContinuas.get(idContinua);
-			result.addAll(laSeriede6);
-		}
-		return result;
-	}
-
 	/**
 	 * @param n
 	 * @return
@@ -252,18 +220,14 @@ public class ReaderService {
 		return true;
 	}
 
-	public static boolean isFibonacci(int n) {
+	/**
+	 * @param n
+	 * @return
+	 */
+	public boolean isFibonacci(int n) {
 		int[] fibosInt = new int[] { 1, 2, 3, 5, 8, 13, 21, 34, 55 };
 		List<Integer> fibos = Arrays.stream(fibosInt).boxed().collect(Collectors.toList());
 		return fibos.contains(n);
 	}
-
-	/*
-	 * public static void main(String[] args) { Reader r = new Reader(); for
-	 * (int i = 1; i <= 56; ++i) { if (r.isPrime(i)) { System.out.println("i=" +
-	 * i + ".-" + (r.isPrime(i) ? "prime" : "no prime")); } }
-	 *
-	 * }
-	 */
 
 }
