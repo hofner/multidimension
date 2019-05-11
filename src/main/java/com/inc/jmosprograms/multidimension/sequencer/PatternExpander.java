@@ -12,15 +12,23 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inc.jmosprograms.multidimension.config.ApplicationProperties;
 import com.inc.jmosprograms.multidimension.vo.ExpandItem;
 
 @Component
 public class PatternExpander {
 	@Autowired
+	ApplicationProperties props;
+
+	@Autowired
 	ScriptReader reader;
 
-	public ArrayList<String> expandScript(String scriptType) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	@Autowired
+	VariableTableModel model;
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+	public ArrayList<ExpandItem> expandScript(String scriptType) {
+
 		String scriptToExpand = "";
 		if (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA)) {
 			scriptToExpand = reader.loadSQLScriptHistograma();
@@ -38,17 +46,45 @@ public class PatternExpander {
 			scriptToExpand = scriptToExpand.replaceAll("@fecha@", "" + sdf.format(new Date()));
 		}
 
-		ArrayList<String> variables_ins = this.extractVariablesFromScript(scriptToExpand);
+		ArrayList<String> variables_ins = extractVariablesFromScript(scriptToExpand);
 		Hashtable<String, List<Integer>> groupVariableAndvalues_ins = null;
-		if (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA)
-				|| scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) {
-			groupVariableAndvalues_ins = this.groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_SQL);
+		String fileNameToExpand = null;
+		/*
+		 if (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA) ||
+		 scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) {
+		 groupVariableAndvalues_ins =
+		 groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_HISTOGRAMA); if
+		 (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA)) {
+		 fileNameToExpand = props.getSqlCsvHistograma(); } else { if
+		 (scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) { fileNameToExpand
+		 = props.getSqlCsvPlot(); } } }
+		 */
+		if (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA)) {
+			groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_HISTOGRAMA);
+			fileNameToExpand = props.getSqlCsvHistograma();
+		} else {
+			if (scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) {
+				groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_PLOT);
+				fileNameToExpand = props.getSqlCsvPlot();
+			}
 		}
-		if (scriptType.equals(ScriptReader.R_PATTERN_HISTOGRAMA) || scriptType.equals(ScriptReader.R_PATTERN_PLOT)) {
-			groupVariableAndvalues_ins = this.groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_R);
+		/*if (scriptType.equals(ScriptReader.R_PATTERN_HISTOGRAMA) || scriptType.equals(ScriptReader.R_PATTERN_PLOT)) {
+			groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_PLOT);
+
+		}*/
+		if (scriptType.equals(ScriptReader.R_PATTERN_HISTOGRAMA)) {
+			groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_HISTOGRAMA);
+
+		} else {
+			if (scriptType.equals(ScriptReader.R_PATTERN_PLOT)) {
+				groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_PLOT);
+
+			}
 		}
-		ArrayList<String> scriptsExpanded = new ArrayList<>();
-		this.expandScriptExpressions(scriptsExpanded, variables_ins, groupVariableAndvalues_ins, scriptToExpand, 0);
+
+		ArrayList<ExpandItem> scriptsExpanded = new ArrayList<>();
+		expandScriptExpressions(scriptsExpanded, variables_ins, groupVariableAndvalues_ins, scriptToExpand,
+				fileNameToExpand, 0);
 		return scriptsExpanded;
 
 	}
@@ -75,7 +111,7 @@ public class PatternExpander {
 	}
 
 	private Hashtable<String, List<Integer>> groupVariableAndvalues(String variableType) {
-		VariableTableModel model = new VariableTableModel(variableType);
+		model.init(variableType);
 		int maxi = model.getRowCount();
 		ArrayList<Integer> valuesList = null;
 		Hashtable<String, List<Integer>> variableHashValues = new Hashtable<>();
@@ -110,26 +146,38 @@ public class PatternExpander {
 	}
 
 	public void expandScriptExpressions(ArrayList<ExpandItem> scriptsExpanded, ArrayList<String> variables_ins,
-			Hashtable<String, List<Integer>> groupVariableAndvalues_ins, ExpandItem item, int i) {
+			Hashtable<String, List<Integer>> groupVariableAndvalues_ins, String segment, String fileToSave, int i) {
 		String var_i = variables_ins.get(i);
 		List<Integer> vals = groupVariableAndvalues_ins.get(var_i);
 
 		for (int j = 0; j < vals.size(); j++) {
 			Integer val_enesimo = vals.get(j);
 
-			String segmentEvaluado = item.getEvaluatedExpression().replaceAll("@" + var_i + "@", "" + val_enesimo);
-			item.setEvaluatedExpression(segmentEvaluado);
-			item.setVariable(var_i);
+			String segmentEvaluado = segment.replaceAll("@" + var_i + "@", "" + val_enesimo);
+			String fileToSaveEvaluado = null;
+			if (fileToSave != null) {
+				fileToSaveEvaluado = fileToSave.replaceAll("@" + var_i + "@", "" + val_enesimo);
+			}
+
 			if (i < variables_ins.size() - 1) {
-				expandScriptExpressions(scriptsExpanded, variables_ins, groupVariableAndvalues_ins, item, i + 1);
+				expandScriptExpressions(scriptsExpanded, variables_ins, groupVariableAndvalues_ins, segmentEvaluado,
+						fileToSaveEvaluado, i + 1);
 			} else {
+				ExpandItem item = new ExpandItem();
+				item.setEvaluatedExpression(segmentEvaluado);
+				if (fileToSaveEvaluado != null) {
+					fileToSaveEvaluado = fileToSaveEvaluado.replaceAll("@fecha@", "" + sdf.format(new Date()));
+					item.setVariable(fileToSaveEvaluado.substring(0, 2));
+				}
+				item.setFileNameResultset(fileToSaveEvaluado);
+
 				scriptsExpanded.add(item);
 			}
 		}
 	}
 
 	@Deprecated
-	void expandScriptExpressions(ArrayList<String> scriptsExpanded, ArrayList<String> variables_ins,
+	void expandScriptExpressions2(ArrayList<String> scriptsExpanded, ArrayList<String> variables_ins,
 			Hashtable<String, List<Integer>> groupVariableAndvalues_ins, String segment, int i) {
 		String var_i = variables_ins.get(i);
 		List<Integer> vals = groupVariableAndvalues_ins.get(var_i);
@@ -138,7 +186,7 @@ public class PatternExpander {
 			Integer val_enesimo = vals.get(j);
 			String segmentEvaluado = segment.replaceAll("@" + var_i + "@", "" + val_enesimo);
 			if (i < variables_ins.size() - 1) {
-				expandScriptExpressions(scriptsExpanded, variables_ins, groupVariableAndvalues_ins, segmentEvaluado,
+				expandScriptExpressions2(scriptsExpanded, variables_ins, groupVariableAndvalues_ins, segmentEvaluado,
 						i + 1);
 			} else {
 				scriptsExpanded.add(segmentEvaluado);
@@ -166,10 +214,11 @@ public class PatternExpander {
 				+ " fecha< str_to_date('1/1/2020','%d/%m/%Y') " + "and concurso<=@var2@ " + "order by CONCURSO desc;";
 		item.setEvaluatedExpression(content1);
 
-		expander.expandScriptExpressions(scriptsExpanded, variables_ins, groupVariableAndvalues_ins, item, 0);
+		expander.expandScriptExpressions(scriptsExpanded, variables_ins, groupVariableAndvalues_ins, content1,
+				"R@var1@-forHistograma-20190412-@var2@.csv", 0);
 		for (int i = 0; i < scriptsExpanded.size(); i++) {
 			ExpandItem expandItem = scriptsExpanded.get(i);
-			System.out.println(expandItem.getEvaluatedExpression());
+			System.out.println(expandItem.getEvaluatedExpression() + "\t" + expandItem.getFileNameResultset());
 
 		}
 	}

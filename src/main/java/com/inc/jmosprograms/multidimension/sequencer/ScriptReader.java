@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ScriptReader {
-	public static final String VARIABLES_VALUES_SQL = "variables-values-sql.txt";
-	public static final String VARIABLES_VALUES_R = "variables-values-r.txt";
-	public static final String R_PATTERN_PLOT = "r-pattern-plot.r";
-	public static final String R_PATTERN_HISTOGRAMA = "r-pattern-histograma.r";
+	public static final String VARIABLES_VALUES_HISTOGRAMA = "variables-values-histograma.txt";
+	public static final String VARIABLES_VALUES_PLOT = "variables-values-plot.txt";
+	public static final String R_PATTERN_PLOT = "r-pattern-plot.R";
+	public static final String R_PATTERN_HISTOGRAMA = "r-pattern-histograma.R";
 	public static final String SQL_PATTERN_PLOT = "sql-pattern-plot.sql";
 	public static final String SQL_PATTERN_HISTOGRAMA = "sql-pattern-histograma.sql";
 
@@ -52,11 +52,11 @@ public class ScriptReader {
 	}
 
 	public String loadVariablesR() {
-		return readFile(VARIABLES_VALUES_R);
+		return readFile(VARIABLES_VALUES_PLOT);
 	}
 
 	public String loadVariablesSql() {
-		return readFile(VARIABLES_VALUES_SQL);
+		return readFile(VARIABLES_VALUES_HISTOGRAMA);
 	}
 
 }

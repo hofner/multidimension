@@ -14,6 +14,7 @@ public class Finder {
 	@Autowired
 	ApplicationProperties props;
 
+	@Deprecated
 	public String findFileToProcess() {
 
 		String ruta = props.getSourcePath();
@@ -27,6 +28,7 @@ public class Finder {
 
 	}
 
+	@Deprecated
 	public void moveFoundFile() {
 
 		String sourcePath = props.getSourcePath();

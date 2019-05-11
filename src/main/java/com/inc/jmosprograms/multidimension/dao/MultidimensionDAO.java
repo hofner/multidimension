@@ -1,5 +1,7 @@
 package com.inc.jmosprograms.multidimension.dao;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -11,37 +13,31 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- *
- * ********************************* IMPLEMENTACION MYSQL
- * *********************************
- *
- *
+import com.inc.jmosprograms.multidimension.config.ApplicationProperties;
+import com.inc.jmosprograms.multidimension.vo.ExpandItem;
+
+/*
  * @author Juan Miguel Olguin Salguero
  *
  */
 @Component
 public class MultidimensionDAO {
+	@Autowired
+	ApplicationProperties props;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.inc.jmosprograms.multidimension.dao.MultidimensionDAO#
-	 * findAllMultidimensionResultset(java.util.ArrayList)
-	 */
-	public ArrayList<String> findAllMultidimensionResultset(ArrayList<String> queries) throws Exception {
-		ArrayList<String> fileContentList = new ArrayList<>();
+	public void executeAndSaveResultset(ArrayList<ExpandItem> queries) throws Exception {
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/machinelearning", "root",
-					"password");
-			for (Iterator<String> iterator = queries.iterator(); iterator.hasNext();) {
-				String query = iterator.next();
+			Class.forName(props.getDriverClassName());
+			Connection conn = DriverManager.getConnection(props.getJdbcUrl(), props.getUserName(), props.getPassword());
+			for (Iterator<ExpandItem> iterator = queries.iterator(); iterator.hasNext();) {
+				ExpandItem queryObj = iterator.next();
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(query);
+				ResultSet rs = stmt.executeQuery(queryObj.getEvaluatedExpression());
 				ResultSetMetaData meta = rs.getMetaData();
 				// Imprimir los labels de la columna
 				StringBuffer stringColumnNames = new StringBuffer();
@@ -67,16 +63,20 @@ public class MultidimensionDAO {
 				}
 				completeFileContent = new StringBuffer(
 						completeFileContent.substring(0, completeFileContent.lastIndexOf("\n")));
+				String path = props.getProjectRoot();
+				BufferedWriter bw = new BufferedWriter(
+						new FileWriter(path + "\\" + queryObj.getVariable() + "\\" + queryObj.getFileNameResultset()));
+				bw.write(completeFileContent.toString());
+				bw.close();
 				rs.close();
 				stmt.close();
-				fileContentList.add(completeFileContent.toString());
+
 			}
 
 			conn.close();
 		} catch (Exception se) {
 			throw new Exception(se);
 		}
-		return fileContentList;
 
 	}
 

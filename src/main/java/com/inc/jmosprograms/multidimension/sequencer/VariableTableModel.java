@@ -4,21 +4,26 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class VariableTableModel implements TableModel {
 
 	@Autowired
 	ScriptReader reader;
 	String content;
 
-	public VariableTableModel(String name) {
-		if (name.equals(ScriptReader.VARIABLES_VALUES_SQL)) {
+	public VariableTableModel() {
+
+	}
+
+	void init(String name) {
+		if (name.equals(ScriptReader.VARIABLES_VALUES_HISTOGRAMA)) {
 			content = reader.loadVariablesSql();
 		}
-		if (name.equals(ScriptReader.VARIABLES_VALUES_R)) {
+		if (name.equals(ScriptReader.VARIABLES_VALUES_PLOT)) {
 			content = reader.loadVariablesR();
 		}
-
 	}
 
 	@Override

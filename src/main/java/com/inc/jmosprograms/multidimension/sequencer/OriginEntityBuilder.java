@@ -2,8 +2,9 @@ package com.inc.jmosprograms.multidimension.sequencer;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,8 +16,10 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inc.jmosprograms.multidimension.config.ApplicationProperties;
 import com.inc.jmosprograms.multidimension.entity.Melate;
 import com.inc.jmosprograms.multidimension.entity.MelateContinua;
 import com.inc.jmosprograms.multidimension.vo.MELATE_COLUMNS_ENUM;
@@ -34,6 +37,8 @@ public class OriginEntityBuilder {
 	SimpleDateFormat sacarNumeroDiaFormat;
 	SimpleDateFormat sacarNumeroMesFormat;
 	SimpleDateFormat sacarNumeroYearFormat;
+	@Autowired
+	ApplicationProperties props;
 
 	public OriginEntityBuilder() {
 		sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -48,13 +53,13 @@ public class OriginEntityBuilder {
 		sacarNumeroYearFormat = new SimpleDateFormat("yyyy", localeMX);
 	}
 
-	MelateVoContainers loadFile(String filePath) {
+	MelateVoContainers loadFileUrl() {
 		ArrayList<Melate> arryResults = null;
 		TreeMap<Integer, ArrayList<MelateContinua>> treemapContinuas = new TreeMap<>();
 
 		try {
-
-			BufferedReader br = new BufferedReader(new FileReader(filePath));
+			URL url = new URL(props.getUrlReadMultidimension());
+			BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 			String ln = "";
 			int i = 0;
 

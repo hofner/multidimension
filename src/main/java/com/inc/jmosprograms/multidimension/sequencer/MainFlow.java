@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.inc.jmosprograms.multidimension.dao.MultidimensionDAO;
 import com.inc.jmosprograms.multidimension.repository.PipelineDAO;
 import com.inc.jmosprograms.multidimension.service.ReaderService;
+import com.inc.jmosprograms.multidimension.vo.ExpandItem;
 import com.inc.jmosprograms.multidimension.vo.MelateVoContainers;
 
 @Service
@@ -27,6 +28,8 @@ public class MainFlow {
 	PatternExpander expander;
 	@Autowired
 	MultidimensionDAO dimensionDAO;
+	@Autowired
+	ScriptWriter swrit;
 
 	private static Logger LOG = Logger.getLogger(ReaderService.class);
 	private static final int TIME_INTERVAL = 6 * 60 * 60 * 1000;
@@ -37,23 +40,41 @@ public class MainFlow {
 		LOG.info("Corriendolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
 
 		/////////////////////////////////////////
-		String filePath = finder.findFileToProcess();
-		MelateVoContainers melatesContainers = rowsLoader.loadFile(filePath);
+		MelateVoContainers melatesContainers = rowsLoader.loadFileUrl();
+		LOG.info("Data from URL with data to be analized Done- " + dateTimeFormatter.format(LocalDateTime.now()));
 		dao.truncateTables();
-		// dao.deleteEntity(Melate.class);
-		// dao.deleteEntity(MelateContinua.class);
+		LOG.info("Tables cleaned Done- " + dateTimeFormatter.format(LocalDateTime.now()));
+		LOG.info("Reading URL with data to be analized - " + dateTimeFormatter.format(LocalDateTime.now()));
 		dao.saveAll(melatesContainers);
+		LOG.info("Data from url store in database tables Done- " + dateTimeFormatter.format(LocalDateTime.now()));
 
-		finder.moveFoundFile();
-		ArrayList<String> sentenciasHistograma = expander.expandScript(ScriptReader.SQL_PATTERN_HISTOGRAMA);
-		ArrayList<String> sentenciasPlot = expander.expandScript(ScriptReader.SQL_PATTERN_PLOT);
+		ArrayList<ExpandItem> sentenciasHistograma = expander.expandScript(ScriptReader.SQL_PATTERN_HISTOGRAMA);
+		ArrayList<ExpandItem> sentenciasPlot = expander.expandScript(ScriptReader.SQL_PATTERN_PLOT);
+		LOG.info("Querys generated - " + dateTimeFormatter.format(LocalDateTime.now()));
+
 		try {
-			ArrayList<String> histogramasCsv = dimensionDAO.findAllMultidimensionResultset(sentenciasHistograma);
-			ArrayList<String> plotsCsv = dimensionDAO.findAllMultidimensionResultset(sentenciasPlot);
+			dimensionDAO.executeAndSaveResultset(sentenciasHistograma);
+			dimensionDAO.executeAndSaveResultset(sentenciasPlot);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		LOG.info("Querys executed and results saved (Histograma & Plot)- "
+				+ dateTimeFormatter.format(LocalDateTime.now()));
+		ArrayList<ExpandItem> consolaHistoR = expander.expandScript(ScriptReader.R_PATTERN_HISTOGRAMA);
+		ArrayList<ExpandItem> consolaPlotR = expander.expandScript(ScriptReader.R_PATTERN_PLOT);
+		LOG.info("R scripts expanded - " + dateTimeFormatter.format(LocalDateTime.now()));
+		String fileRForR_API_Histograma = swrit.saveRscriptsConsole(consolaHistoR, ScriptWriter.HISTOGRAMA);
+		String fileRForR_API_Plot = swrit.saveRscriptsConsole(consolaPlotR, ScriptWriter.PLOT);
+		LOG.info("R scripts save in folder to be run - " + dateTimeFormatter.format(LocalDateTime.now()));
+		// vamos a correr los archivos r generados con el engine de R
+		RExecutor rExecutor1 = new RExecutor(fileRForR_API_Histograma);
+		RExecutor rExecutor2 = new RExecutor(fileRForR_API_Plot);
+		LOG.info("Starting scripts in R engine - " + dateTimeFormatter.format(LocalDateTime.now()));
+		rExecutor1.start();
+		rExecutor2.start();
+		LOG.info("scripts finished - " + dateTimeFormatter.format(LocalDateTime.now()));
+		LOG.info("PIPELINE finished - " + dateTimeFormatter.format(LocalDateTime.now()));
 
 		////////////////////////////
 
