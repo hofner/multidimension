@@ -41,6 +41,8 @@ public class Melate {
 	/// calculados
 	@Column(name = "FECHA_STR")
 	private String fechaStr;
+	@Column(name = "FECHA_INT")
+	private Integer fechaInt;
 	@Column(name = "NOMBRE_DIA")
 	private String nombreDia;
 	@Column(name = "NOMBRE_MES")
@@ -465,6 +467,14 @@ public class Melate {
 
 	public void setR7Fibonacci(String r7Fibonacci) {
 		this.r7Fibonacci = r7Fibonacci;
+	}
+
+	public Integer getFechaInt() {
+		return fechaInt;
+	}
+
+	public void setFechaInt(Integer fechaInt) {
+		this.fechaInt = fechaInt;
 	}
 
 }

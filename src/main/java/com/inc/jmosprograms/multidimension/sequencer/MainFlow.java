@@ -46,6 +46,8 @@ public class MainFlow {
 		LOG.info("Tables cleaned Done- " + dateTimeFormatter.format(LocalDateTime.now()));
 		LOG.info("Reading URL with data to be analized - " + dateTimeFormatter.format(LocalDateTime.now()));
 		dao.saveAll(melatesContainers);
+		LOG.info("TERMINADO :: " + melatesContainers.getResult().size() + " INSERTED MELATE and MELATESCONTINUAS ROWS- "
+				+ dateTimeFormatter.format(LocalDateTime.now()));
 		LOG.info("Data from url store in database tables Done- " + dateTimeFormatter.format(LocalDateTime.now()));
 
 		ArrayList<ExpandItem> sentenciasHistograma = expander.expandScript(ScriptReader.SQL_PATTERN_HISTOGRAMA);
@@ -67,19 +69,20 @@ public class MainFlow {
 		String fileRForR_API_Histograma = swrit.saveRscriptsConsole(consolaHistoR, ScriptWriter.HISTOGRAMA);
 		String fileRForR_API_Plot = swrit.saveRscriptsConsole(consolaPlotR, ScriptWriter.PLOT);
 		LOG.info("R scripts save in folder to be run - " + dateTimeFormatter.format(LocalDateTime.now()));
+		LOG.info("SUCCESS");
 		// vamos a correr los archivos r generados con el engine de R
-		RExecutor rExecutor1 = new RExecutor(fileRForR_API_Histograma);
+		//la siguiente ejecucion se hace por medio de bats
+		/*RExecutor rExecutor1 = new RExecutor(fileRForR_API_Histograma);
 		RExecutor rExecutor2 = new RExecutor(fileRForR_API_Plot);
 		LOG.info("Starting scripts in R engine - " + dateTimeFormatter.format(LocalDateTime.now()));
 		rExecutor1.start();
 		rExecutor2.start();
 		LOG.info("scripts finished - " + dateTimeFormatter.format(LocalDateTime.now()));
-		LOG.info("PIPELINE finished - " + dateTimeFormatter.format(LocalDateTime.now()));
+		LOG.info("PIPELINE finished - " + dateTimeFormatter.format(LocalDateTime.now()));*/
 
 		////////////////////////////
 
-		LOG.info("TERMINADO :: " + melatesContainers.getResult().size() + " INSERTED MELATE and MELATESCONTINUAS ROWS- "
-				+ dateTimeFormatter.format(LocalDateTime.now()));
+		
 	}
 
 }

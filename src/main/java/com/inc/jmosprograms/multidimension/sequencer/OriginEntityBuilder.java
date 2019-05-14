@@ -29,6 +29,7 @@ import com.inc.jmosprograms.multidimension.vo.MelateVoContainers;
 public class OriginEntityBuilder {
 	SimpleDateFormat sdf;
 	SimpleDateFormat dateToStringFormat;
+	SimpleDateFormat dateToIntFormat;
 	Locale localeMX;
 	SimpleDateFormat nombreDiaFormat;
 	SimpleDateFormat nombreMesFormat;
@@ -43,6 +44,7 @@ public class OriginEntityBuilder {
 	public OriginEntityBuilder() {
 		sdf = new SimpleDateFormat("dd/MM/yyyy");
 		dateToStringFormat = new SimpleDateFormat("dd-MM-yyyy");
+		dateToIntFormat = new SimpleDateFormat("yyMMdd");
 		localeMX = new Locale("es", "MX");
 		nombreDiaFormat = new SimpleDateFormat("EEEE", localeMX);
 		nombreMesFormat = new SimpleDateFormat("MMMM", localeMX);
@@ -109,6 +111,8 @@ public class OriginEntityBuilder {
 								Date date = sdf.parse(token);
 								mela.setFecha(date);
 								mela.setFechaStr(dateToStringFormat.format(date));
+								String datenumStr = dateToIntFormat.format(date);
+								mela.setFechaInt(Integer.parseInt(datenumStr));
 							} catch (ParseException e) {
 
 								e.printStackTrace();
