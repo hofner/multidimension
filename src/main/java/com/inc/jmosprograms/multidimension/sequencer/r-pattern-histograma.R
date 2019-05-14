@@ -12,4 +12,4 @@ ggplot(my.data, aes(x = R@var1@)) +
              colour = "yellow", linetype ="longdash", size = 1)+
   geom_vline(aes(xintercept = my.data[1,1]),
              colour = "blue", linetype ="longdash", size = 1)
-ggsave("R@var1@/R@var1@-forHistograma-@fecha@-@var2@.jpg", width=14.80, height=8.05, dpi = 100,device="jpeg" )
+ggsave("R@var1@/R@var1@-forHistograma-@fecha@-@var2@.jpg", width=14.80, height=8.03, dpi = 100,device="jpeg" )

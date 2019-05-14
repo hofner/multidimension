@@ -13,4 +13,4 @@ ggplot(my.data,aes(x=concurso,y=R@var1@)) +
              colour = "green", linetype ="longdash", size = 1)+
   geom_hline(aes(yintercept = var(R@var1@, na.rm = T)),
              colour = "yellow", linetype ="longdash", size = 1)
-ggsave("R@var1@/R@var1@-forPlot-@fecha@-@var2@.jpg", width=14.80, height=8.05, dpi = 100,device="jpeg" )
+ggsave("R@var1@/R@var1@-forPlot-@fecha@-@var2@.jpg", width=14.80, height=8.03, dpi = 100,device="jpeg" )
