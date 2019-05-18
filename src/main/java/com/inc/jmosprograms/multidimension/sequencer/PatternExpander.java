@@ -30,18 +30,17 @@ public class PatternExpander {
 	public ArrayList<ExpandItem> expandScript(String scriptType) {
 
 		String scriptToExpand = "";
-		if (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA)) {
-			scriptToExpand = reader.loadSQLScriptHistograma();
-		}
-		if (scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) {
-			scriptToExpand = reader.loadSQLScriptPlot();
-		}
-		if (scriptType.equals(ScriptReader.R_PATTERN_HISTOGRAMA)) {
-			scriptToExpand = reader.loadRScriptHistograma();
-		}
-		if (scriptType.equals(ScriptReader.R_PATTERN_PLOT)) {
-			scriptToExpand = reader.loadRScriptPlot();
-		}
+		/*
+		 * if (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA)) {
+		 * scriptToExpand = reader.loadSQLScriptHistograma(); } if
+		 * (scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) { scriptToExpand =
+		 * reader.loadSQLScriptPlot(); } if
+		 * (scriptType.equals(ScriptReader.R_PATTERN_HISTOGRAMA)) {
+		 * scriptToExpand = reader.loadRScriptHistograma(); } if
+		 * (scriptType.equals(ScriptReader.R_PATTERN_PLOT)) { scriptToExpand =
+		 * reader.loadRScriptPlot(); }
+		 */
+		scriptToExpand = reader.readFile(scriptType);
 		if (scriptToExpand.indexOf("@fecha@") >= 0) {
 			scriptToExpand = scriptToExpand.replaceAll("@fecha@", "" + sdf.format(new Date()));
 		}
@@ -50,14 +49,14 @@ public class PatternExpander {
 		Hashtable<String, List<Integer>> groupVariableAndvalues_ins = null;
 		String fileNameToExpand = null;
 		/*
-		 if (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA) ||
-		 scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) {
-		 groupVariableAndvalues_ins =
-		 groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_HISTOGRAMA); if
-		 (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA)) {
-		 fileNameToExpand = props.getSqlCsvHistograma(); } else { if
-		 (scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) { fileNameToExpand
-		 = props.getSqlCsvPlot(); } } }
+		 * if (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA) ||
+		 * scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) {
+		 * groupVariableAndvalues_ins =
+		 * groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_HISTOGRAMA); if
+		 * (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA)) {
+		 * fileNameToExpand = props.getSqlCsvHistograma(); } else { if
+		 * (scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) { fileNameToExpand
+		 * = props.getSqlCsvPlot(); } } }
 		 */
 		if (scriptType.equals(ScriptReader.SQL_PATTERN_HISTOGRAMA)) {
 			groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_HISTOGRAMA);
@@ -66,18 +65,32 @@ public class PatternExpander {
 			if (scriptType.equals(ScriptReader.SQL_PATTERN_PLOT)) {
 				groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_PLOT);
 				fileNameToExpand = props.getSqlCsvPlot();
+			} else {
+				if (scriptType.equals(ScriptReader.SQL_PATTERN_CONTINUA)) {
+					groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_CONTINUA);
+					fileNameToExpand = props.getSqlCsvContinua();
+				}
 			}
 		}
-		/*if (scriptType.equals(ScriptReader.R_PATTERN_HISTOGRAMA) || scriptType.equals(ScriptReader.R_PATTERN_PLOT)) {
-			groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_PLOT);
-
-		}*/
+		/*
+		 * if (scriptType.equals(ScriptReader.R_PATTERN_HISTOGRAMA) ||
+		 * scriptType.equals(ScriptReader.R_PATTERN_PLOT)) {
+		 * groupVariableAndvalues_ins =
+		 * groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_PLOT);
+		 *
+		 * }
+		 */
 		if (scriptType.equals(ScriptReader.R_PATTERN_HISTOGRAMA)) {
 			groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_HISTOGRAMA);
 
 		} else {
 			if (scriptType.equals(ScriptReader.R_PATTERN_PLOT)) {
 				groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_PLOT);
+
+			} else {
+				if (scriptType.equals(ScriptReader.R_PATTERN_CONTINUA)) {
+					groupVariableAndvalues_ins = groupVariableAndvalues(ScriptReader.VARIABLES_VALUES_CONTINUA);
+				}
 
 			}
 		}

@@ -10,12 +10,15 @@ import org.springframework.stereotype.Component;
 public class ScriptReader {
 	public static final String VARIABLES_VALUES_HISTOGRAMA = "variables-values-histograma.txt";
 	public static final String VARIABLES_VALUES_PLOT = "variables-values-plot.txt";
+	public static final String VARIABLES_VALUES_CONTINUA = "variables-values-continua.txt";
 	public static final String R_PATTERN_PLOT = "r-pattern-plot.R";
 	public static final String R_PATTERN_HISTOGRAMA = "r-pattern-histograma.R";
+	public static final String R_PATTERN_CONTINUA = "r-pattern-continua.R";
 	public static final String SQL_PATTERN_PLOT = "sql-pattern-plot.sql";
 	public static final String SQL_PATTERN_HISTOGRAMA = "sql-pattern-histograma.sql";
+	public static final String SQL_PATTERN_CONTINUA = "sql-pattern-continua.sql";
 
-	private String readFile(String filename) {
+	public String readFile(String filename) {
 		InputStream resourceAsStream = ScriptReader.class.getResourceAsStream(filename);
 		InputStreamReader ir = new InputStreamReader(resourceAsStream);
 		BufferedReader br = new BufferedReader(ir);
@@ -35,6 +38,7 @@ public class ScriptReader {
 
 	}
 
+	/*
 	public String loadSQLScriptHistograma() {
 		return readFile(SQL_PATTERN_HISTOGRAMA);
 	}
@@ -58,5 +62,6 @@ public class ScriptReader {
 	public String loadVariablesSql() {
 		return readFile(VARIABLES_VALUES_HISTOGRAMA);
 	}
+	*/
 
 }

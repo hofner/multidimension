@@ -14,12 +14,16 @@ public class ApplicationProperties {
 	private String sqlCsvHistograma;
 	@Value("${interpolation.file.sqlcsvplot}")
 	private String sqlCsvPlot;
+	@Value("${interpolation.file.sqlcsvcontinua}")
+	private String sqlCsvContinua;
 	@Value("${interpolation.file.projectroot}")
 	private String projectRoot;
 	@Value("${interpolation.file.rconsolehistogram}")
 	private String rConsoleHistogram;
 	@Value("${interpolation.file.rconsoleplot}")
 	private String rConsolePlot;
+	@Value("${interpolation.file.rconsolecontinua}")
+	private String rConsoleContinua;
 
 	@Value("${spring.datasource.jdbcUrl}")
 	private String jdbcUrl;
@@ -126,6 +130,22 @@ public class ApplicationProperties {
 
 	public void setUrlReadMultidimension(String urlReadMultidimension) {
 		this.urlReadMultidimension = urlReadMultidimension;
+	}
+
+	public String getSqlCsvContinua() {
+		return sqlCsvContinua;
+	}
+
+	public void setSqlCsvContinua(String sqlCsvContinua) {
+		this.sqlCsvContinua = sqlCsvContinua;
+	}
+
+	public String getrConsoleContinua() {
+		return rConsoleContinua;
+	}
+
+	public void setrConsoleContinua(String rConsoleContinua) {
+		this.rConsoleContinua = rConsoleContinua;
 	}
 
 }

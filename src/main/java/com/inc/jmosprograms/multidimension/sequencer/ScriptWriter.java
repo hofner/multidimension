@@ -15,6 +15,7 @@ import com.inc.jmosprograms.multidimension.vo.ExpandItem;
 public class ScriptWriter {
 	public static final int HISTOGRAMA = 1;
 	public static final int PLOT = 2;
+	public static final int CONTINUA = 3;
 	@Autowired
 	ApplicationProperties props;
 
@@ -28,6 +29,9 @@ public class ScriptWriter {
 		}
 		if (scriptType == ScriptWriter.PLOT) {
 			fileoutput += props.getrConsolePlot();
+		}
+		if (scriptType == ScriptWriter.CONTINUA) {
+			fileoutput += props.getrConsoleContinua();
 		}
 
 		sb.append("getwd()\n");

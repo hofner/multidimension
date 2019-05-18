@@ -18,12 +18,8 @@ public class VariableTableModel implements TableModel {
 	}
 
 	void init(String name) {
-		if (name.equals(ScriptReader.VARIABLES_VALUES_HISTOGRAMA)) {
-			content = reader.loadVariablesSql();
-		}
-		if (name.equals(ScriptReader.VARIABLES_VALUES_PLOT)) {
-			content = reader.loadVariablesR();
-		}
+		content = reader.readFile(name);
+
 	}
 
 	@Override

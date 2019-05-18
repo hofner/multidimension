@@ -52,11 +52,13 @@ public class MainFlow {
 
 		ArrayList<ExpandItem> sentenciasHistograma = expander.expandScript(ScriptReader.SQL_PATTERN_HISTOGRAMA);
 		ArrayList<ExpandItem> sentenciasPlot = expander.expandScript(ScriptReader.SQL_PATTERN_PLOT);
+		ArrayList<ExpandItem> sentenciasContinua = expander.expandScript(ScriptReader.SQL_PATTERN_CONTINUA);
 		LOG.info("Querys generated - " + dateTimeFormatter.format(LocalDateTime.now()));
 
 		try {
 			dimensionDAO.executeAndSaveResultset(sentenciasHistograma);
 			dimensionDAO.executeAndSaveResultset(sentenciasPlot);
+			dimensionDAO.executeAndSaveResultset(sentenciasContinua);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,24 +67,28 @@ public class MainFlow {
 				+ dateTimeFormatter.format(LocalDateTime.now()));
 		ArrayList<ExpandItem> consolaHistoR = expander.expandScript(ScriptReader.R_PATTERN_HISTOGRAMA);
 		ArrayList<ExpandItem> consolaPlotR = expander.expandScript(ScriptReader.R_PATTERN_PLOT);
+		ArrayList<ExpandItem> consolaContinuaR = expander.expandScript(ScriptReader.R_PATTERN_CONTINUA);
 		LOG.info("R scripts expanded - " + dateTimeFormatter.format(LocalDateTime.now()));
 		String fileRForR_API_Histograma = swrit.saveRscriptsConsole(consolaHistoR, ScriptWriter.HISTOGRAMA);
 		String fileRForR_API_Plot = swrit.saveRscriptsConsole(consolaPlotR, ScriptWriter.PLOT);
+		String fileRForR_API_Continua = swrit.saveRscriptsConsole(consolaContinuaR, ScriptWriter.CONTINUA);
 		LOG.info("R scripts save in folder to be run - " + dateTimeFormatter.format(LocalDateTime.now()));
 		LOG.info("SUCCESS");
 		// vamos a correr los archivos r generados con el engine de R
-		//la siguiente ejecucion se hace por medio de bats
-		/*RExecutor rExecutor1 = new RExecutor(fileRForR_API_Histograma);
-		RExecutor rExecutor2 = new RExecutor(fileRForR_API_Plot);
-		LOG.info("Starting scripts in R engine - " + dateTimeFormatter.format(LocalDateTime.now()));
-		rExecutor1.start();
-		rExecutor2.start();
-		LOG.info("scripts finished - " + dateTimeFormatter.format(LocalDateTime.now()));
-		LOG.info("PIPELINE finished - " + dateTimeFormatter.format(LocalDateTime.now()));*/
+		// la siguiente ejecucion se hace por medio de bats
+		/*
+		 * RExecutor rExecutor1 = new RExecutor(fileRForR_API_Histograma);
+		 * RExecutor rExecutor2 = new RExecutor(fileRForR_API_Plot);
+		 * LOG.info("Starting scripts in R engine - " +
+		 * dateTimeFormatter.format(LocalDateTime.now())); rExecutor1.start();
+		 * rExecutor2.start(); LOG.info("scripts finished - " +
+		 * dateTimeFormatter.format(LocalDateTime.now()));
+		 * LOG.info("PIPELINE finished - " +
+		 * dateTimeFormatter.format(LocalDateTime.now()));
+		 */
 
 		////////////////////////////
 
-		
 	}
 
 }
