@@ -162,6 +162,7 @@ public class OriginEntityBuilder {
 					mela.setR6Fibonacci(isFibonacci(mela.getR6()) ? "FIBONACCI" : "NO_FIBONACCI");
 					mela.setR7Fibonacci(isFibonacci(mela.getR7()) ? "FIBONACCI" : "NO_FIBONACCI");
 
+					mela.setDiff(mela.getR6() - mela.getR1());
 					mela.setDiff2(mela.getR2() - mela.getR1());
 					mela.setDiff3(mela.getR3() - mela.getR2());
 					mela.setDiff4(mela.getR4() - mela.getR3());

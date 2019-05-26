@@ -11,12 +11,19 @@ public class ScriptReader {
 	public static final String VARIABLES_VALUES_HISTOGRAMA = "variables-values-histograma.txt";
 	public static final String VARIABLES_VALUES_PLOT = "variables-values-plot.txt";
 	public static final String VARIABLES_VALUES_CONTINUA = "variables-values-continua.txt";
+	public static final String VARIABLES_VALUES_DIFF = "variables-values-diff.txt";
+	public static final String VARIABLES_VALUES_DIFFHISTO = "variables-values-diffhisto.txt";
 	public static final String R_PATTERN_PLOT = "r-pattern-plot.R";
 	public static final String R_PATTERN_HISTOGRAMA = "r-pattern-histograma.R";
 	public static final String R_PATTERN_CONTINUA = "r-pattern-continua.R";
+	public static final String R_PATTERN_DIFF = "r-pattern-diff.R";
+	public static final String R_PATTERN_DIFFHISTO = "r-pattern-diffhisto.R";
+
 	public static final String SQL_PATTERN_PLOT = "sql-pattern-plot.sql";
 	public static final String SQL_PATTERN_HISTOGRAMA = "sql-pattern-histograma.sql";
 	public static final String SQL_PATTERN_CONTINUA = "sql-pattern-continua.sql";
+	public static final String SQL_PATTERN_DIFF = "sql-pattern-diff.sql";
+	public static final String SQL_PATTERN_DIFFHISTO = "sql-pattern-diffhisto.sql";
 
 	public String readFile(String filename) {
 		InputStream resourceAsStream = ScriptReader.class.getResourceAsStream(filename);
@@ -37,31 +44,4 @@ public class ScriptReader {
 		return sb.toString();
 
 	}
-
-	/*
-	public String loadSQLScriptHistograma() {
-		return readFile(SQL_PATTERN_HISTOGRAMA);
-	}
-
-	public String loadSQLScriptPlot() {
-		return readFile(SQL_PATTERN_PLOT);
-	}
-
-	public String loadRScriptHistograma() {
-		return readFile(R_PATTERN_HISTOGRAMA);
-	}
-
-	public String loadRScriptPlot() {
-		return readFile(R_PATTERN_PLOT);
-	}
-
-	public String loadVariablesR() {
-		return readFile(VARIABLES_VALUES_PLOT);
-	}
-
-	public String loadVariablesSql() {
-		return readFile(VARIABLES_VALUES_HISTOGRAMA);
-	}
-	*/
-
 }

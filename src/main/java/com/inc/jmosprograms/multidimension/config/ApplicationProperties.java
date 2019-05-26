@@ -9,6 +9,8 @@ public class ApplicationProperties {
 	private String sourcePath;
 	@Value("${interpolation.file.rutaprocesado}")
 	private String rutaProcesado;
+	@Value("${interpolation.file.projectroot}")
+	private String projectRoot;
 
 	@Value("${interpolation.file.sqlcsvhistograma}")
 	private String sqlCsvHistograma;
@@ -16,14 +18,21 @@ public class ApplicationProperties {
 	private String sqlCsvPlot;
 	@Value("${interpolation.file.sqlcsvcontinua}")
 	private String sqlCsvContinua;
-	@Value("${interpolation.file.projectroot}")
-	private String projectRoot;
+	@Value("${interpolation.file.sqlcsvdiff}")
+	private String sqlCsvDiff;
+	@Value("${interpolation.file.sqlcsvdiffhisto}")
+	private String sqlCsvDiffhisto;
+
 	@Value("${interpolation.file.rconsolehistogram}")
 	private String rConsoleHistogram;
 	@Value("${interpolation.file.rconsoleplot}")
 	private String rConsolePlot;
 	@Value("${interpolation.file.rconsolecontinua}")
 	private String rConsoleContinua;
+	@Value("${interpolation.file.rconsolediff}")
+	private String rConsoleDiff;
+	@Value("${interpolation.file.rconsolediffhisto}")
+	private String rConsoleDiffhisto;
 
 	@Value("${spring.datasource.jdbcUrl}")
 	private String jdbcUrl;
@@ -146,6 +155,38 @@ public class ApplicationProperties {
 
 	public void setrConsoleContinua(String rConsoleContinua) {
 		this.rConsoleContinua = rConsoleContinua;
+	}
+
+	public String getrConsoleDiff() {
+		return rConsoleDiff;
+	}
+
+	public void setrConsoleDiff(String rConsoleDiff) {
+		this.rConsoleDiff = rConsoleDiff;
+	}
+
+	public String getSqlCsvDiff() {
+		return sqlCsvDiff;
+	}
+
+	public void setSqlCsvDiff(String sqlCsvDiff) {
+		this.sqlCsvDiff = sqlCsvDiff;
+	}
+
+	public String getSqlCsvDiffhisto() {
+		return sqlCsvDiffhisto;
+	}
+
+	public void setSqlCsvDiffhisto(String sqlCsvDiffhisto) {
+		this.sqlCsvDiffhisto = sqlCsvDiffhisto;
+	}
+
+	public String getrConsoleDiffhisto() {
+		return rConsoleDiffhisto;
+	}
+
+	public void setrConsoleDiffhisto(String rConsoleDiffhisto) {
+		this.rConsoleDiffhisto = rConsoleDiffhisto;
 	}
 
 }

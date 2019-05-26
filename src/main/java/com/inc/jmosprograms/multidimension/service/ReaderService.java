@@ -39,7 +39,7 @@ public class ReaderService {
 	// It might be replaced by this another rule : Scheduled(cron = "0 6 16 * *
 	// ?")
 	// Now it's set to every 5 hours
-	private static final int TIME_INTERVAL = 6 * 60 * 60 * 1000;
+	private static final int TIME_INTERVAL = 24 * 60 * 60 * 1000;
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 	// @Scheduled(fixedRate = TIME_INTERVAL)

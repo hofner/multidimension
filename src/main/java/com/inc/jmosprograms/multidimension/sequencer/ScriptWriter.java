@@ -16,6 +16,8 @@ public class ScriptWriter {
 	public static final int HISTOGRAMA = 1;
 	public static final int PLOT = 2;
 	public static final int CONTINUA = 3;
+	public static final int DIFF = 4;
+	public static final int DIFFHISTO = 5;
 	@Autowired
 	ApplicationProperties props;
 
@@ -32,6 +34,12 @@ public class ScriptWriter {
 		}
 		if (scriptType == ScriptWriter.CONTINUA) {
 			fileoutput += props.getrConsoleContinua();
+		}
+		if (scriptType == ScriptWriter.DIFF) {
+			fileoutput += props.getrConsoleDiff();
+		}
+		if (scriptType == ScriptWriter.DIFFHISTO) {
+			fileoutput += props.getrConsoleDiffhisto();
 		}
 
 		sb.append("getwd()\n");

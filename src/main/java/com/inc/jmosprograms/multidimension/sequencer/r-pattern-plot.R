@@ -1,5 +1,5 @@
 my.data<-read.csv("R@var1@/R@var1@-forPlot-@fecha@-@var2@.csv")
-ggplot(my.data,aes(x=id,y=R@var1@)) +
+ggplot(my.data,aes(x=concurso,y=R@var1@)) +
   geom_line()+
   geom_point()+
   scale_y_continuous(limits = c(0, 56), breaks = 1:56)+

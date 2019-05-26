@@ -86,6 +86,8 @@ public class MelateContinua {
 	@Column(name = "R7_FIBONACCI")
 	private String r7Fibonacci;
 	@Column
+	private Integer diff;
+	@Column
 	private Integer diff2;
 	@Column
 	private Integer diff3;
@@ -135,6 +137,7 @@ public class MelateContinua {
 		r5Fibonacci = melate.getR5Fibonacci();
 		r6Fibonacci = melate.getR6Fibonacci();
 		r7Fibonacci = melate.getR7Fibonacci();
+		diff = melate.getDiff();
 		diff2 = melate.getDiff2();
 		diff3 = melate.getDiff3();
 		diff4 = melate.getDiff4();
@@ -461,6 +464,14 @@ public class MelateContinua {
 
 	public void setFechaInt(Integer fechaInt) {
 		this.fechaInt = fechaInt;
+	}
+
+	public Integer getDiff() {
+		return diff;
+	}
+
+	public void setDiff(Integer diff) {
+		this.diff = diff;
 	}
 
 }

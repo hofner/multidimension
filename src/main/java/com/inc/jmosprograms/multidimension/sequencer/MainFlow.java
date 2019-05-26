@@ -32,7 +32,8 @@ public class MainFlow {
 	ScriptWriter swrit;
 
 	private static Logger LOG = Logger.getLogger(ReaderService.class);
-	private static final int TIME_INTERVAL = 6 * 60 * 60 * 1000;
+	/// interval de 24 horas
+	private static final int TIME_INTERVAL = 24 * 60 * 60 * 1000;
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 	@Scheduled(fixedRate = TIME_INTERVAL)
@@ -53,25 +54,34 @@ public class MainFlow {
 		ArrayList<ExpandItem> sentenciasHistograma = expander.expandScript(ScriptReader.SQL_PATTERN_HISTOGRAMA);
 		ArrayList<ExpandItem> sentenciasPlot = expander.expandScript(ScriptReader.SQL_PATTERN_PLOT);
 		ArrayList<ExpandItem> sentenciasContinua = expander.expandScript(ScriptReader.SQL_PATTERN_CONTINUA);
+		ArrayList<ExpandItem> sentenciasDiff = expander.expandScript(ScriptReader.SQL_PATTERN_DIFF);
+		ArrayList<ExpandItem> sentenciasDiffhisto = expander.expandScript(ScriptReader.SQL_PATTERN_DIFFHISTO);
 		LOG.info("Querys generated - " + dateTimeFormatter.format(LocalDateTime.now()));
 
 		try {
 			dimensionDAO.executeAndSaveResultset(sentenciasHistograma);
 			dimensionDAO.executeAndSaveResultset(sentenciasPlot);
 			dimensionDAO.executeAndSaveResultset(sentenciasContinua);
+			dimensionDAO.executeAndSaveResultset(sentenciasDiff);
+			dimensionDAO.executeAndSaveResultset(sentenciasDiffhisto);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.exit(1);
 		}
 		LOG.info("Querys executed and results saved (Histograma & Plot)- "
 				+ dateTimeFormatter.format(LocalDateTime.now()));
 		ArrayList<ExpandItem> consolaHistoR = expander.expandScript(ScriptReader.R_PATTERN_HISTOGRAMA);
 		ArrayList<ExpandItem> consolaPlotR = expander.expandScript(ScriptReader.R_PATTERN_PLOT);
 		ArrayList<ExpandItem> consolaContinuaR = expander.expandScript(ScriptReader.R_PATTERN_CONTINUA);
+		ArrayList<ExpandItem> consolaDiffR = expander.expandScript(ScriptReader.R_PATTERN_DIFF);
+		ArrayList<ExpandItem> consolaDiffhistoR = expander.expandScript(ScriptReader.R_PATTERN_DIFFHISTO);
 		LOG.info("R scripts expanded - " + dateTimeFormatter.format(LocalDateTime.now()));
 		String fileRForR_API_Histograma = swrit.saveRscriptsConsole(consolaHistoR, ScriptWriter.HISTOGRAMA);
 		String fileRForR_API_Plot = swrit.saveRscriptsConsole(consolaPlotR, ScriptWriter.PLOT);
 		String fileRForR_API_Continua = swrit.saveRscriptsConsole(consolaContinuaR, ScriptWriter.CONTINUA);
+		String fileRForR_API_Diff = swrit.saveRscriptsConsole(consolaDiffR, ScriptWriter.DIFF);
+		String fileRForR_API_Diffhisto = swrit.saveRscriptsConsole(consolaDiffhistoR, ScriptWriter.DIFFHISTO);
 		LOG.info("R scripts save in folder to be run - " + dateTimeFormatter.format(LocalDateTime.now()));
 		LOG.info("SUCCESS");
 		// vamos a correr los archivos r generados con el engine de R

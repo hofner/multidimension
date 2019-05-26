@@ -1,4 +1,4 @@
-select R@var1@,CONCURSO,fecha from multidimension 
+select R@var1@,concurso,fecha from multidimension 
 where 
 fecha>= str_to_date('1/1/2009','%d/%m/%Y') and 
 fecha< str_to_date('1/1/2020','%d/%m/%Y') 
