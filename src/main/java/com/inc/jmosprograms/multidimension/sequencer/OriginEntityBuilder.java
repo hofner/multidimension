@@ -40,6 +40,7 @@ public class OriginEntityBuilder {
 	SimpleDateFormat sacarNumeroYearFormat;
 	@Autowired
 	ApplicationProperties props;
+	int latestConcurso;
 
 	public OriginEntityBuilder() {
 		sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -81,6 +82,9 @@ public class OriginEntityBuilder {
 							break;
 						case MELATE_COLUMNS_ENUM.CONCURSO:
 							mela.setConcurso(Integer.parseInt(token));
+							if (i == 1) {
+								latestConcurso = mela.getConcurso();
+							}
 							break;
 						case MELATE_COLUMNS_ENUM.R1:
 							mela.setR1(Integer.parseInt(token));
@@ -238,6 +242,14 @@ public class OriginEntityBuilder {
 		int[] fibosInt = new int[] { 1, 2, 3, 5, 8, 13, 21, 34, 55 };
 		List<Integer> fibos = Arrays.stream(fibosInt).boxed().collect(Collectors.toList());
 		return fibos.contains(n);
+	}
+
+	public int getLatestConcurso() {
+		return latestConcurso;
+	}
+
+	public void setLatestConcurso(int latestConcurso) {
+		this.latestConcurso = latestConcurso;
 	}
 
 }

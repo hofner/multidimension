@@ -43,7 +43,7 @@ public class ScriptWriter {
 		}
 
 		sb.append("getwd()\n");
-		sb.append("setwd(\"C:/jmNewDevelopment/development-R/instant-graphs\")\n");
+		sb.append("setwd(\"C:/jmNewDevelopment/development-R/instant-graphss\")\n");
 		sb.append("getwd()\n");
 		sb.append("library(ggplot2)\n");
 

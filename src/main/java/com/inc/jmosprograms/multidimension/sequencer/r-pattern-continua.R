@@ -14,3 +14,5 @@ ggplot(my.data,aes(x=id,y=r_continua)) +
   geom_hline(aes(yintercept = var(r_continua, na.rm = T)),
              colour = "yellow", linetype ="longdash", size = 1)
 ggsave("R@var1@/R@var1@-forContinua-@fecha@-@var2@.jpg", width=14.80, height=8.03, dpi = 100,device="jpeg" )
+mensaje<-paste("imagen generada " ,"R@var1@/R@var1@-forContinua-@fecha@-@var2@.jpg")
+mensaje            

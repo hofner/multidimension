@@ -44,6 +44,8 @@ public class ApplicationProperties {
 	private String password;
 	@Value("${interpolation.url.multdimensionurl}")
 	private String urlReadMultidimension;
+	@Value("${interpolation.file.moviesprojectroot}")
+	private String moviesProjectRoot;
 
 	public String getSourcePath() {
 		return sourcePath;
@@ -187,6 +189,14 @@ public class ApplicationProperties {
 
 	public void setrConsoleDiffhisto(String rConsoleDiffhisto) {
 		this.rConsoleDiffhisto = rConsoleDiffhisto;
+	}
+
+	public String getMoviesProjectRoot() {
+		return moviesProjectRoot;
+	}
+
+	public void setMoviesProjectRoot(String moviesProjectRoot) {
+		this.moviesProjectRoot = moviesProjectRoot;
 	}
 
 }

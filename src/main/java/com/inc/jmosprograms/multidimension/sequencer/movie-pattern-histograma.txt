@@ -1,6 +1,6 @@
-ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R1-forHistograma-20190527-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R1-forHistograma-20190527.mp4
-ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R2-forHistograma-20190527-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R2-forHistograma-20190527.mp4
-ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R3-forHistograma-20190527-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R3-forHistograma-20190527.mp4
-ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R4-forHistograma-20190527-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R4-forHistograma-20190527.mp4
-ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R5-forHistograma-20190527-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R5-forHistograma-20190527.mp4
-ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R6-forHistograma-20190527-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R6-forHistograma-20190527.mp4
+ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R1-forHistograma-20190531-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R1-forHistograma-20190531.mp4
+ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R2-forHistograma-20190531-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R2-forHistograma-20190531.mp4
+ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R3-forHistograma-20190531-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R3-forHistograma-20190531.mp4
+ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R4-forHistograma-20190531-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R4-forHistograma-20190531.mp4
+ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R5-forHistograma-20190531-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R5-forHistograma-20190531.mp4
+ffmpeg -start_number 2200 -r 2 -f image2 -s 1480x802 -i  R6-forHistograma-20190531-%d.jpg -vcodec libx264 -crf 25  -pix_fmt yuv420p R6-forHistograma-20190531.mp4

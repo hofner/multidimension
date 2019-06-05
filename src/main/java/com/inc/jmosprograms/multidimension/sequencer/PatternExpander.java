@@ -25,7 +25,9 @@ public class PatternExpander {
 
 	@Autowired
 	VariableTableModel model;
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	public SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+	private int latestConcurso;
 
 	public ArrayList<ExpandItem> expandScript(String scriptType) {
 
@@ -116,7 +118,7 @@ public class PatternExpander {
 		return variables;
 	}
 
-	private Hashtable<String, List<Integer>> groupVariableAndvalues(String variableType) {
+	public Hashtable<String, List<Integer>> groupVariableAndvalues(String variableType) {
 		model.init(variableType);
 		int maxi = model.getRowCount();
 		ArrayList<Integer> valuesList = null;
@@ -133,6 +135,9 @@ public class PatternExpander {
 				String finValStr = valueExpresion.split(":")[1];
 				int inival = Integer.parseInt(iniValStr);
 				int finval = Integer.parseInt(finValStr);
+				if (variableName.equals("var2") && finval > 3280) {
+					finval = latestConcurso;
+				}
 				valuesList = new ArrayList<>();
 				if (inival < finval) {
 					for (int k = inival; k <= finval; ++k) {
@@ -227,6 +232,19 @@ public class PatternExpander {
 			System.out.println(expandItem.getEvaluatedExpression() + "\t" + expandItem.getFileNameResultset());
 
 		}
+	}
+
+	public void setMaxConcurso(int latestConcurso) {
+		this.latestConcurso = latestConcurso;
+
+	}
+
+	public int getLatestConcurso() {
+		return latestConcurso;
+	}
+
+	public void setLatestConcurso(int latestConcurso) {
+		this.latestConcurso = latestConcurso;
 	}
 
 }

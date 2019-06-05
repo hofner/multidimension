@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.inc.jmosprograms.multidimension.command.RunningCommands;
+import com.inc.jmosprograms.multidimension.command.RunningCommandsMovies;
 import com.inc.jmosprograms.multidimension.dao.MultidimensionDAO;
 import com.inc.jmosprograms.multidimension.repository.PipelineDAO;
 import com.inc.jmosprograms.multidimension.service.ReaderService;
@@ -30,13 +32,15 @@ public class MainFlow {
 	MultidimensionDAO dimensionDAO;
 	@Autowired
 	ScriptWriter swrit;
+	@Autowired
+	RunningCommandsMovies runningCommandsMovies;
 
 	private static Logger LOG = Logger.getLogger(ReaderService.class);
 	/// interval de 24 horas
 	private static final int TIME_INTERVAL = 24 * 60 * 60 * 1000;
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-	@Scheduled(fixedRate = TIME_INTERVAL)
+	// @Scheduled(fixedRate = TIME_INTERVAL)
 	public void pipelineMultidimension() {
 		LOG.info("Corriendolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
 
@@ -50,7 +54,7 @@ public class MainFlow {
 		LOG.info("TERMINADO :: " + melatesContainers.getResult().size() + " INSERTED MELATE and MELATESCONTINUAS ROWS- "
 				+ dateTimeFormatter.format(LocalDateTime.now()));
 		LOG.info("Data from url store in database tables Done- " + dateTimeFormatter.format(LocalDateTime.now()));
-
+		expander.setMaxConcurso(rowsLoader.getLatestConcurso());
 		ArrayList<ExpandItem> sentenciasHistograma = expander.expandScript(ScriptReader.SQL_PATTERN_HISTOGRAMA);
 		ArrayList<ExpandItem> sentenciasPlot = expander.expandScript(ScriptReader.SQL_PATTERN_PLOT);
 		ArrayList<ExpandItem> sentenciasContinua = expander.expandScript(ScriptReader.SQL_PATTERN_CONTINUA);
@@ -76,28 +80,48 @@ public class MainFlow {
 		ArrayList<ExpandItem> consolaContinuaR = expander.expandScript(ScriptReader.R_PATTERN_CONTINUA);
 		ArrayList<ExpandItem> consolaDiffR = expander.expandScript(ScriptReader.R_PATTERN_DIFF);
 		ArrayList<ExpandItem> consolaDiffhistoR = expander.expandScript(ScriptReader.R_PATTERN_DIFFHISTO);
+
 		LOG.info("R scripts expanded - " + dateTimeFormatter.format(LocalDateTime.now()));
 		String fileRForR_API_Histograma = swrit.saveRscriptsConsole(consolaHistoR, ScriptWriter.HISTOGRAMA);
 		String fileRForR_API_Plot = swrit.saveRscriptsConsole(consolaPlotR, ScriptWriter.PLOT);
 		String fileRForR_API_Continua = swrit.saveRscriptsConsole(consolaContinuaR, ScriptWriter.CONTINUA);
 		String fileRForR_API_Diff = swrit.saveRscriptsConsole(consolaDiffR, ScriptWriter.DIFF);
 		String fileRForR_API_Diffhisto = swrit.saveRscriptsConsole(consolaDiffhistoR, ScriptWriter.DIFFHISTO);
+
 		LOG.info("R scripts save in folder to be run - " + dateTimeFormatter.format(LocalDateTime.now()));
-		LOG.info("SUCCESS");
+
+		LOG.info("Starting scripts in R engine - " + dateTimeFormatter.format(LocalDateTime.now()));
 		// vamos a correr los archivos r generados con el engine de R
-		// la siguiente ejecucion se hace por medio de bats
-		/*
-		 * RExecutor rExecutor1 = new RExecutor(fileRForR_API_Histograma);
-		 * RExecutor rExecutor2 = new RExecutor(fileRForR_API_Plot);
-		 * LOG.info("Starting scripts in R engine - " +
-		 * dateTimeFormatter.format(LocalDateTime.now())); rExecutor1.start();
-		 * rExecutor2.start(); LOG.info("scripts finished - " +
-		 * dateTimeFormatter.format(LocalDateTime.now()));
-		 * LOG.info("PIPELINE finished - " +
-		 * dateTimeFormatter.format(LocalDateTime.now()));
-		 */
+		RunningCommands commands = new RunningCommands();
+		commands.executeCommands(RunningCommands.HISTOGRAM, fileRForR_API_Histograma);
+		commands.executeCommands(RunningCommands.PLOT, fileRForR_API_Plot);
+		commands.executeCommands(RunningCommands.CONTINUA, fileRForR_API_Continua);
+		commands.executeCommands(RunningCommands.DIFF, fileRForR_API_Diff);
+		commands.executeCommands(RunningCommands.DIFFHISTO, fileRForR_API_Diffhisto);
+
+		LOG.info("SUCCESS");
+
+		LOG.info("scripts finished - " + dateTimeFormatter.format(LocalDateTime.now()));
+		LOG.info("PIPELINE finished - " + dateTimeFormatter.format(LocalDateTime.now()));
 
 		////////////////////////////
+
+	}
+
+	@Scheduled(fixedRate = TIME_INTERVAL)
+	public void moviesMultidimension() {
+		LOG.info("Corriendolo :: Execution Time - " + dateTimeFormatter.format(LocalDateTime.now()));
+		MelateVoContainers melatesContainers = rowsLoader.loadFileUrl();
+		expander.setMaxConcurso(rowsLoader.getLatestConcurso());
+		/////////////////////////////////////////
+
+		for (int i = 1; i <= 6; i++) {
+			runningCommandsMovies.executeCommands(RunningCommands.HISTOGRAM, "" + i);
+			runningCommandsMovies.executeCommands(RunningCommands.PLOT, "" + i);
+		}
+		runningCommandsMovies.executeCommands(RunningCommands.CONTINUA, null);
+		runningCommandsMovies.executeCommands(RunningCommands.DIFF, null);
+		runningCommandsMovies.executeCommands(RunningCommands.DIFFHISTO, null);
 
 	}
 

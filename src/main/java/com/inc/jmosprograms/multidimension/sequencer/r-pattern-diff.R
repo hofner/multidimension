@@ -14,3 +14,5 @@ ggplot(my.data,aes(x=concurso,y=diff)) +
   geom_hline(aes(yintercept = var(diff, na.rm = T)),
              colour = "yellow", linetype ="longdash", size = 1)
 ggsave("R@var1@/R@var1@-forDiff-@fecha@-@var2@.jpg", width=14.80, height=8.03, dpi = 100,device="jpeg" )
+mensaje<-paste("imagen generada " ,"R@var1@/R@var1@-forDiff-@fecha@-@var2@.jpg")
+mensaje            
