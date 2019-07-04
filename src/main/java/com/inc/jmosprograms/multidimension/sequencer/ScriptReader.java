@@ -24,6 +24,7 @@ public class ScriptReader {
 	public static final String SQL_PATTERN_CONTINUA = "sql-pattern-continua.sql";
 	public static final String SQL_PATTERN_DIFF = "sql-pattern-diff.sql";
 	public static final String SQL_PATTERN_DIFFHISTO = "sql-pattern-diffhisto.sql";
+	public static final String SQL_PATTERN_WEKA = "sql-pattern-weka.sql";
 
 	public String readFile(String filename) {
 		InputStream resourceAsStream = ScriptReader.class.getResourceAsStream(filename);

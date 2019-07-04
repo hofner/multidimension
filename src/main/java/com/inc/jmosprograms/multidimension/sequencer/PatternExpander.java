@@ -97,6 +97,23 @@ public class PatternExpander {
 
 	}
 
+	public ArrayList<ExpandItem> expandScriptWeka(String scriptType) {
+
+		String scriptToExpand = "";
+		scriptToExpand = reader.readFile(scriptType);
+		ExpandItem item = new ExpandItem();
+		item.setEvaluatedExpression(scriptToExpand);
+		String fileToSaveEvaluado = null;
+		fileToSaveEvaluado = "weka-@fecha@.csv".replaceAll("@fecha@", "" + sdf.format(new Date()));
+		item.setFileNameResultset(fileToSaveEvaluado);
+		item.setVariable("\\.\\.");// en vez de dejarlo en la carpeta R1, la
+									// dejo en la siguiente carpeta superior
+		ArrayList<ExpandItem> scriptsExpanded = new ArrayList<>();
+		scriptsExpanded.add(item);
+		return scriptsExpanded;
+
+	}
+
 	private ArrayList<String> extractVariablesFromScript(String script) {
 		ArrayList<String> variables = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(script, "@", true);
